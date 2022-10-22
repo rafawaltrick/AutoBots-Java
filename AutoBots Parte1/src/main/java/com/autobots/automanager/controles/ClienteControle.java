@@ -3,6 +3,8 @@ package com.autobots.automanager.controles;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,16 +40,18 @@ public class ClienteControle {
 	}
 
 	@PostMapping("/cadastro")
-	public void cadastrarCliente(@RequestBody Cliente cliente) {
+	public ResponseEntity<Cliente> cadastrarCliente(@RequestBody Cliente cliente) {
 		repositorio.save(cliente);
+		return new ResponseEntity<>(cliente, HttpStatus.I_AM_A_TEAPOT);
 	}
 
 	@PutMapping("/atualizar")
-	public void atualizarCliente(@RequestBody Cliente atualizacao) {
+	public ResponseEntity<Cliente> atualizarCliente(@RequestBody Cliente atualizacao) {
 		Cliente cliente = repositorio.getById(atualizacao.getId());
 		ClienteAtualizador atualizador = new ClienteAtualizador();
 		atualizador.atualizar(cliente, atualizacao);
 		repositorio.save(cliente);
+		return new ResponseEntity<Cliente>(atualizacao, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/excluir")
