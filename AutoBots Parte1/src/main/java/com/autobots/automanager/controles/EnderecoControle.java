@@ -19,13 +19,13 @@ public class EnderecoControle {
 	private EnderecoRepositorio repositorio;
 	@Autowired
 	private EnderecoSelecionador selecionador;
-	
+
 	@GetMapping("/enderecos")
 	public List<Endereco> buscaEndereco() {
 		List<Endereco> enderecos = repositorio.findAll();
 		return enderecos;
 	}
-	
+
 	@GetMapping("/endereco/{id}")
 	public Endereco obterEndereco(@PathVariable long id) {
 		List<Endereco> enderecos = repositorio.findAll();

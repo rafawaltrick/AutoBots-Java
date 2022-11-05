@@ -11,7 +11,7 @@ public class EnderecoSelecionador {
 	public Endereco selecionar(List<Endereco> enderecos, long id) {
 		Endereco selecionado = null;
 		for (Endereco endereco : enderecos) {
-			if (endereco.GetId() == id) {
+			if (endereco.getId() == id) {
 				selecionado = endereco;
 			}
 		}
