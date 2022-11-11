@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.autobots.automanager.entidades.Cliente;
 import com.autobots.automanager.entidades.Telefone;
+import com.autobots.automanager.modelo.CadastroTelefone;
 import com.autobots.automanager.modelo.ClienteSelecionador;
 import com.autobots.automanager.modelo.TelefoneAtualizador;
 import com.autobots.automanager.modelo.TelefoneSelecionador;
@@ -32,19 +33,19 @@ public class TelefoneControle {
 	private ClienteSelecionador selecionadorCliente;
 	@Autowired
 	private TelefoneSelecionador selecionador;
-	
+
 	@GetMapping("/telefones")
 	public List<Telefone> buscarTelefone() {
 		List<Telefone> telefone = repositorio.findAll();
 		return telefone;
 	}
-	
+
 	@GetMapping("/telefone/{id}")
 	public Telefone obterTelefone(@PathVariable long id) {
 		List<Telefone> telefone = repositorio.findAll();
 		return selecionador.selecionar(telefone, id);
 	}
-	
+
 	@PutMapping("/atualizar")
 	public ResponseEntity<Telefone> atualizarCliente(@RequestBody Telefone atualizacao) {
 		Telefone telefone = repositorio.getById(atualizacao.getId());
@@ -53,15 +54,19 @@ public class TelefoneControle {
 		repositorio.save(telefone);
 		return new ResponseEntity<Telefone>(atualizacao, HttpStatus.OK);
 	}
+
 	
-	@PostMapping("/cadastro/{id}")
-	public void cadastrarTelefone(@PathVariable Long id, @RequestBody Telefone telefone) {
-		List<Cliente> cliente =  repositorioCliente.findAll();
-		Cliente alvo = selecionadorCliente.selecionar(cliente, id);
-		alvo.getTelefones().add(telefone);
+	@PostMapping("/inserir")
+	public void inserirTelefone(@RequestBody CadastroTelefone dados) {
+		Cliente alvo = selecionadorCliente.selecionar(repositorioCliente.findAll(), dados.getId());
+
+		Telefone tel = new Telefone();
+		tel.setDdd(dados.getDdd());
+		tel.setNumero(dados.getNumero());
+
+		alvo.getTelefones().add(tel);
+
 		repositorioCliente.save(alvo);
-		repositorio.save(telefone);
-		
 	}
 
 }
