@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import com.autobots.automanager.entidades.Cliente;
 import com.autobots.automanager.entidades.Telefone;
 import com.autobots.automanager.modelo.CadastroTelefone;
 import com.autobots.automanager.modelo.ClienteSelecionador;
+import com.autobots.automanager.modelo.ExcluirTelefone;
 import com.autobots.automanager.modelo.TelefoneAtualizador;
 import com.autobots.automanager.modelo.TelefoneSelecionador;
 import com.autobots.automanager.repositorios.ClienteRepositorio;
@@ -67,6 +69,20 @@ public class TelefoneControle {
 		alvo.getTelefones().add(tel);
 
 		repositorioCliente.save(alvo);
+	}
+	
+	@DeleteMapping("/excluir")
+	public void excluirTelefone(@RequestBody ExcluirTelefone exclusao) {
+		Cliente cliente = repositorioCliente.getById(exclusao.getIdCliente());
+		Telefone alvo = null;
+		for(Telefone tel: cliente.getTelefones()) {
+			if(tel.getId() == exclusao.getIdTel()) {
+				alvo = tel;
+				repositorio.deleteById(tel.getId());
+			}
+		}
+		cliente.getTelefones().remove(alvo);
+		repositorioCliente.save(cliente);
 	}
 
 }
